@@ -1,6 +1,6 @@
 # Wiki-BAC-BJ
 
-![Logo Wiki-BAC-BJ](https://placeholder.com/logo)
+![Logo Wiki-BAC-BJ](https://i.ibb.co/YBY5wcVM/DALL-E-2025-03-29-15-56-57-A-modern-minimalistic-logo-for-Wiki-BAC-BJ-an-open-source-educational-pla.webp")
 
 ## 📚 Projet Open Source pour mutualiser les ressources sur le BAC au Bénin
 
