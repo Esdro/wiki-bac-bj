@@ -19,21 +19,25 @@ Wiki-BAC-BJ sera une plateforme collaborative où les élèves, enseignants, par
 ## 🎯 Ce que nous proposons
 
 ### 1. Une banque d'épreuves complète
+
 - **Épreuves du BAC** des 20 dernières années, classées par série, matière et année
 - **Corrigés détaillés** pour chaque épreuve
 - **Commentaires pédagogiques** sur les points importants
 
 ### 2. Des fiches de révision
+
 - **Résumés de cours** par chapitre, conformes au programme national
 - **Exercices types** avec solutions détaillées
 - **Méthodologies** pour aborder chaque type d'épreuve
 
 ### 3. Un forum d'entraide
+
 - **Questions/réponses** entre élèves
 - **Conseils** d'anciens bacheliers
 - **Interventions** d'enseignants volontaires
 
 ### 4. Ressources complémentaires
+
 - **Conseils** pour gérer le stress
 - **Techniques de mémorisation** efficace
 - **Plannings de révision** adaptés à chaque série
@@ -58,11 +62,12 @@ Ce projet ne pourra réussir que grâce à la contribution de chacun. Voici comm
 | **Phase 3** | Octobre-Décembre 2025 | Amélioration de la plateforme et enrichissement des contenus |
 | **Phase 4** | Janvier 2026 | Lancement officiel pour les révisions du BAC 2026 |
 
-## 🌟 Rejoignez-nous !
+## 🌟 Rejoignez-nous
 
 Nous sommes convaincus que l'éducation est un droit fondamental et que le partage des connaissances est la clé pour améliorer notre système éducatif.
 
 Pour participer ou en savoir plus:
+
 - 📧 Contactez-nous: [contact@wiki-bac-bj.org](mailto:contact@wiki-bac-bj.org)
 - 💬 Rejoignez notre groupe: [t.me/WikiBACBJ](https://t.me/WikiBACBJ)
 - 🌐 Suivez-nous sur les réseaux sociaux: [@wikibacbj](https://twitter.com/wikibacbj)
@@ -76,8 +81,9 @@ Pour participer ou en savoir plus:
 ---
 
 ### Contributeurs
+
 - [Esdras Onionkiton](https://code-addict.net)
   
-
 ### Licence
+
 Ce projet est sous licence [MIT](LICENSE)
