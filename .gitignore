@@ -1,0 +1,50 @@
+# Environment files
+.env
+.env.local
+.env.*.local
+*.env
+!*.env.example
+
+# Docker volumes data
+docker/postgres-init/data/
+
+# Backend
+/backend/.env
+/backend/.env.local
+/backend/.env.local.php
+/backend/.env.*.local
+/backend/var/
+/backend/vendor/
+/backend/public/bundles/
+/backend/config/secrets/prod/prod.decrypt.private.php
+
+# Frontend
+/frontend/node_modules/
+/frontend/dist/
+/frontend/tmp/
+/frontend/out-tsc/
+/frontend/bazel-out/
+/frontend/.angular/cache/
+/frontend/npm-debug.log
+/frontend/yarn-error.log
+
+# IDEs
+.idea/
+.vscode/
+*.sublime-workspace
+*.sublime-project
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+.history/
+
+# System files
+.DS_Store
+Thumbs.db
+*.log
+
+# Database
+*.sql.backup
+*.db
