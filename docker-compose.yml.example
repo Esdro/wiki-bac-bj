@@ -1,6 +1,6 @@
 services:
   database:
-    image: postgres:17-alpine
+    image: postgres:16-alpine
     environment:
       POSTGRES_DB: wikibac
       POSTGRES_USER: user

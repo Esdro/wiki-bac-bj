@@ -1,13 +1,4 @@
 <main>
-  <h1>{{ title() }}</h1>
-  @if (data()) {
-  <ul>
-    @for (subject of data(); track $index) {
-    <li>{{ subject.name }} - {{ subject.icon }}</li>
-    }
-  </ul>
-  } @else {
-  <p>Loading subjects...</p>
-  }
+<app-home/>
 </main>
-<router-outlet />
+<router-outlet/>
