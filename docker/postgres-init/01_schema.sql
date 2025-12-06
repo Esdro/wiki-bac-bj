@@ -50,13 +50,15 @@ CREATE TABLE subjects (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     name VARCHAR(100) NOT NULL,
     code VARCHAR(10) NOT NULL UNIQUE,
-    icon VARCHAR(255)
+    icon VARCHAR(255),
+    slug VARCHAR(255)
 );
 CREATE TABLE series (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     code VARCHAR(10) NOT NULL UNIQUE,
     name VARCHAR(100) NOT NULL,
-    description TEXT
+    description TEXT,
+    slug VARCHAR(255)
 );
 CREATE TABLE series_subjects (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
@@ -73,12 +75,14 @@ CREATE TABLE chapters (
     title VARCHAR(255) NOT NULL,
     order_num INTEGER NOT NULL,
     description TEXT,
+    slug VARCHAR(255),
     FOREIGN KEY (subject_id) REFERENCES subjects(id) ON DELETE CASCADE
 );
 CREATE TABLE resource_types (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     name VARCHAR(50) NOT NULL UNIQUE,
-    description TEXT
+    description TEXT,
+    slug VARCHAR(255)
 );
 CREATE TABLE resources (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
@@ -96,6 +100,7 @@ CREATE TABLE resources (
     view_count INTEGER NOT NULL DEFAULT 0,
     download_count INTEGER NOT NULL DEFAULT 0,
     average_rating DECIMAL(3, 2),
+    slug VARCHAR(255),
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (type_id) REFERENCES resource_types(id) ON DELETE CASCADE,
@@ -109,7 +114,8 @@ CREATE TABLE resources (
 );
 CREATE TABLE tags (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    name VARCHAR(50) NOT NULL UNIQUE
+    name VARCHAR(50) NOT NULL UNIQUE,
+    slug VARCHAR(255)
 );
 CREATE TABLE resource_tags (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
@@ -197,6 +203,7 @@ CREATE TABLE forum_categories (
     description TEXT,
     parent_id UUID,
     order_num INTEGER NOT NULL,
+    slug VARCHAR(255),
     FOREIGN KEY (parent_id) REFERENCES forum_categories(id) ON DELETE CASCADE
 );
 CREATE TABLE forum_topics (

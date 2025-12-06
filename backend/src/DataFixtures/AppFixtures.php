@@ -34,21 +34,47 @@ class AppFixtures extends Fixture
 
     public function load(ObjectManager $manager): void
     {
-        // ===== RÔLES =====
-        $adminRole = (new Role())
-            ->setName('ROLE_ADMIN')
-            ->setPermissions(['can_read', 'can_write', 'can_delete', 'can_manage_users']);
-        $manager->persist($adminRole);
+        // ===== RÔLES (créer ou récupérer) =====
+        $adminRole = $manager->getRepository(Role::class)->findOneBy(['name' => 'admin']);
+        if (!$adminRole) {
+            $adminRole = (new Role())
+                ->setName('admin')
+                ->setPermissions([
+                    'can_view' => true,
+                    'can_comment' => true,
+                    'can_upload' => true,
+                    'can_moderate' => true,
+                    'can_manage_users' => true
+                ]);
+            $manager->persist($adminRole);
+        }
 
-        $teacherRole = (new Role())
-            ->setName('ROLE_TEACHER')
-            ->setPermissions(['can_read', 'can_write', 'can_create_resources']);
-        $manager->persist($teacherRole);
+        $teacherRole = $manager->getRepository(Role::class)->findOneBy(['name' => 'teacher']);
+        if (!$teacherRole) {
+            $teacherRole = (new Role())
+                ->setName('teacher')
+                ->setPermissions([
+                    'can_view' => true,
+                    'can_comment' => true,
+                    'can_upload' => true,
+                    'can_moderate' => true
+                ]);
+            $manager->persist($teacherRole);
+        }
 
-        $studentRole = (new Role())
-            ->setName('ROLE_STUDENT')
-            ->setPermissions(['can_read']);
-        $manager->persist($studentRole);
+        $studentRole = $manager->getRepository(Role::class)->findOneBy(['name' => 'student']);
+        if (!$studentRole) {
+            $studentRole = (new Role())
+                ->setName('student')
+                ->setPermissions([
+                    'can_view' => true,
+                    'can_comment' => true,
+                    'can_upload' => false
+                ]);
+            $manager->persist($studentRole);
+        }
+
+        $manager->flush();
 
         // ===== UTILISATEURS =====
         $adminUser = (new User())
@@ -106,34 +132,58 @@ class AppFixtures extends Fixture
             ->setBio('Élève passionné par les sciences');
         $manager->persist($student2);
 
-        // ===== TYPES DE RESSOURCES =====
-        $videoType = (new ResourceType())
-            ->setName('Vidéo');
-        $manager->persist($videoType);
+        // ===== TYPES DE RESSOURCES (créer ou récupérer) =====
+        $examPaperType = $manager->getRepository(ResourceType::class)->findOneBy(['name' => 'exam_paper']);
+        if (!$examPaperType) {
+            $examPaperType = (new ResourceType())->setName('exam_paper')->setDescription('Épreuve de BAC');
+            $manager->persist($examPaperType);
+        }
 
-        $documentType = (new ResourceType())
-            ->setName('Document PDF');
-        $manager->persist($documentType);
+        $solutionType = $manager->getRepository(ResourceType::class)->findOneBy(['name' => 'solution']);
+        if (!$solutionType) {
+            $solutionType = (new ResourceType())->setName('solution')->setDescription('Corrigé d\'épreuve');
+            $manager->persist($solutionType);
+        }
 
-        $articleType = (new ResourceType())
-            ->setName('Article');
-        $manager->persist($articleType);
+        $revisionSheetType = $manager->getRepository(ResourceType::class)->findOneBy(['name' => 'revision_sheet']);
+        if (!$revisionSheetType) {
+            $revisionSheetType = (new ResourceType())->setName('revision_sheet')->setDescription('Fiche de révision');
+            $manager->persist($revisionSheetType);
+        }
 
-        // ===== MATIÈRES =====
-        $mathSubject = (new Subject())
-            ->setName('Mathématiques')
-            ->setCode('MATH');
-        $manager->persist($mathSubject);
+        $exerciseType = $manager->getRepository(ResourceType::class)->findOneBy(['name' => 'exercise']);
+        if (!$exerciseType) {
+            $exerciseType = (new ResourceType())->setName('exercise')->setDescription('Exercice pratique');
+            $manager->persist($exerciseType);
+        }
 
-        $frenchSubject = (new Subject())
-            ->setName('Français')
-            ->setCode('FR');
-        $manager->persist($frenchSubject);
+        $manager->flush();
 
-        $scienceSubject = (new Subject())
-            ->setName('Sciences')
-            ->setCode('SCI');
-        $manager->persist($scienceSubject);
+        // Pour compatibilité avec le code existant
+        $videoType = $exerciseType;
+        $documentType = $examPaperType;
+        $articleType = $revisionSheetType;
+
+        // ===== MATIÈRES (créer ou récupérer) =====
+        $mathSubject = $manager->getRepository(Subject::class)->findOneBy(['code' => 'MATH']);
+        if (!$mathSubject) {
+            $mathSubject = (new Subject())->setName('Mathématiques')->setCode('MATH')->setIcon('📐');
+            $manager->persist($mathSubject);
+        }
+
+        $frenchSubject = $manager->getRepository(Subject::class)->findOneBy(['code' => 'FR']);
+        if (!$frenchSubject) {
+            $frenchSubject = (new Subject())->setName('Français')->setCode('FR')->setIcon('📖');
+            $manager->persist($frenchSubject);
+        }
+
+        $scienceSubject = $manager->getRepository(Subject::class)->findOneBy(['code' => 'SVT']);
+        if (!$scienceSubject) {
+            $scienceSubject = (new Subject())->setName('Sciences de la Vie et de la Terre')->setCode('SVT')->setIcon('🧬');
+            $manager->persist($scienceSubject);
+        }
+
+        $manager->flush();
 
         // ===== CHAPITRES =====
         $chapter1 = (new Chapter())
@@ -157,18 +207,26 @@ class AppFixtures extends Fixture
             ->setDescription('Littérature du 19ème siècle');
         $manager->persist($chapter3);
 
-        // ===== SÉRIES =====
-        $series1 = (new Series())
-            ->setCode('TLE-S')
-            ->setName('Terminale S')
-            ->setDescription('Classe de Terminale Scientifique');
-        $manager->persist($series1);
+        // ===== SÉRIES (créer ou récupérer) =====
+        $series1 = $manager->getRepository(Series::class)->findOneBy(['code' => 'C']);
+        if (!$series1) {
+            $series1 = (new Series())
+                ->setCode('C')
+                ->setName('Série C')
+                ->setDescription('Mathématiques et Sciences Physiques');
+            $manager->persist($series1);
+        }
 
-        $series2 = (new Series())
-            ->setCode('TLE-L')
-            ->setName('Terminale L')
-            ->setDescription('Classe de Terminale Littéraire');
-        $manager->persist($series2);
+        $series2 = $manager->getRepository(Series::class)->findOneBy(['code' => 'A1']);
+        if (!$series2) {
+            $series2 = (new Series())
+                ->setCode('A1')
+                ->setName('Série A1')
+                ->setDescription('Lettres et Sciences Humaines');
+            $manager->persist($series2);
+        }
+
+        $manager->flush();
 
         // ===== SÉRIES-MATIÈRES =====
         $ss1 = (new SeriesSubject())

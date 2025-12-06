@@ -3,7 +3,6 @@
 namespace App\Entity;
 
 use App\Entity\Trait\UuidPrimaryKey;
-use App\Entity\Trait\SlugTrait;
 use App\Repository\ResourceTypeRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -14,11 +13,9 @@ use Symfony\Component\Uid\Uuid;
 
 #[ORM\Entity(repositoryClass: ResourceTypeRepository::class)]
 #[ORM\Table(name: 'resource_types')]
-#[ORM\HasLifecycleCallbacks]
 class ResourceType
 {
     use UuidPrimaryKey;
-    use SlugTrait;
 
     #[ORM\Column(length: 50, unique: true)]
     #[Groups(['resource_type:read', 'resource:read'])]
@@ -38,13 +35,6 @@ class ResourceType
     {
         $this->id = Uuid::v7();
         $this->resources = new ArrayCollection();
-    }
-
-    public function setNameWithSlug(string $name): static
-    {
-        $this->name = $name;
-        $this->setSlug($name);
-        return $this;
     }
 
     public function getId(): ?Uuid

@@ -3,7 +3,7 @@ import { Component, inject, OnInit, signal } from '@angular/core';
 import { ZardCardComponent } from '@shared/components/card/card.component';
 import { ZardButtonComponent } from '@shared/components/button/button.component';
 import { generateId } from '@shared/utils/merge-classes';
-import { ServerResponseData } from '@app/interfaces';
+import { IUser, ServerResponseData } from '@app/interfaces';
 
 @Component({
   selector: 'app-home',
@@ -27,8 +27,8 @@ export class Home implements OnInit {
       this.title.set('wikibac Frontend - ' + serverResponse.message);
       this.data = serverResponse.data;
     });
-    this.http.get<ServerResponseData>('http://localhost:8998/api/users').subscribe(serverResponse => {
-      console.log(serverResponse);
+    this.http.get<IUser[]>('http://localhost:8998/api/users').subscribe(serverResponse => {
+      console.log('Users:', serverResponse[0].email);
     });
   }
 }
