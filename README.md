@@ -66,7 +66,23 @@ Ce projet ne pourra réussir que grâce à la contribution de chacun. Voici comm
 
 ### Configuration des variables d'environnement
 
-Les fichiers de configuration sensibles (`.env`, `.env.local`, etc.) **ne doivent JAMAIS être commités** dans le repository.
+Les fichiers de configuration sensibles (`.env`, `.env.local`, `docker-compose.yml`, etc.) **ne doivent JAMAIS être commités** dans le repository.
+
+#### Docker Compose
+
+1. Copiez le fichier template :
+```bash
+cp docker-compose.yml.example docker-compose.yml
+```
+
+2. Adaptez les identifiants de base de données dans `docker-compose.yml` si nécessaire :
+```yaml
+services:
+  database:
+    environment:
+      POSTGRES_USER: votre_utilisateur
+      POSTGRES_PASSWORD: votre_mot_de_passe
+```
 
 #### Backend (Symfony)
 
