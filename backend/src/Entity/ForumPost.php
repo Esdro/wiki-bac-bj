@@ -124,4 +124,12 @@ class ForumPost
         $this->isSolution = $isSolution;
         return $this;
     }
+
+    #[ORM\PrePersist]
+    public function handlePrePersist(): void
+    {
+        if (!method_exists($this, 'setIsSolution')) {
+            $this->isSolution = false;
+        }
+    }
 }

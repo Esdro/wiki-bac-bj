@@ -6,16 +6,17 @@
 !.env.example
 !.env.*.example
 
-# Docker volumes data
-docker/postgres-init/data/
-
-# Docker
+# Docker files (sensibles)
 docker-compose.yml
 docker-compose.override.yml
 !docker-compose.yml.example
 !docker-compose.override.yaml
 
+# Docker volumes data
+docker/postgres-init/data/
+
 # Backend
+/backend/.env
 /backend/.env.dev
 /backend/.env.local
 /backend/.env.local.php
@@ -24,16 +25,22 @@ docker-compose.override.yml
 /backend/vendor/
 /backend/public/bundles/
 /backend/config/secrets/prod/prod.decrypt.private.php
+/backend/config/secrets/
+/backend/.DS_Store
 
 # Frontend
 /frontend/node_modules/
 /frontend/dist/
+/frontend/build/
 /frontend/tmp/
 /frontend/out-tsc/
 /frontend/bazel-out/
 /frontend/.angular/cache/
 /frontend/npm-debug.log
 /frontend/yarn-error.log
+/frontend/.env.local
+/frontend/environment.prod.ts
+/frontend/.DS_Store
 
 # IDEs
 .idea/
@@ -46,6 +53,9 @@ docker-compose.override.yml
 *.launch
 .settings/
 .history/
+*.swp
+*.swo
+*~
 
 # System files
 .DS_Store
@@ -55,3 +65,23 @@ Thumbs.db
 # Database
 *.sql.backup
 *.db
+*.sqlite3
+db_data/
+
+# OS-specific
+.env.local.php
+desktop.ini
+
+# Secrets & Keys (sensibles)
+*.key
+*.pem
+*.p12
+*.pfx
+secrets.json
+credentials.json
+
+# Cache & Temporary
+*.cache
+.cache/
+.tmp/
+temp/

@@ -1,9 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, inject, OnInit, signal } from '@angular/core';
-import { ServerResponseData } from '../../interfaces/server-response-data';
 import { ZardCardComponent } from '@shared/components/card/card.component';
 import { ZardButtonComponent } from '@shared/components/button/button.component';
 import { generateId } from '@shared/utils/merge-classes';
+import { ServerResponseData } from '@app/interfaces';
 
 @Component({
   selector: 'app-home',

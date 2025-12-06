@@ -18,6 +18,12 @@
     "paths": {
       "@shared/*": [
         "src/app/shared/*"
+      ],
+      "@app/interfaces": [
+        "src/app/interfaces/index"
+      ],
+      "@app/interfaces/*": [
+        "src/app/interfaces/*"
       ]
     }
   },
