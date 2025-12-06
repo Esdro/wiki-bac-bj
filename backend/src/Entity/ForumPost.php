@@ -6,6 +6,7 @@ use App\Entity\Trait\UuidPrimaryKey;
 use App\Repository\ForumPostRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Attribute\Groups;
 use Symfony\Component\Uid\Uuid;
 
 #[ORM\Entity(repositoryClass: ForumPostRepository::class)]
@@ -21,18 +22,23 @@ class ForumPost
 
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'forumPosts')]
     #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
+    #[Groups(['forum:read'])]
     private ?User $user = null;
 
     #[ORM\Column(type: Types::TEXT)]
+    #[Groups(['forum:read', 'forum:write'])]
     private ?string $content = null;
 
     #[ORM\Column(type: 'datetime_immutable')]
+    #[Groups(['forum:read'])]
     private ?\DateTimeImmutable $createdAt = null;
 
     #[ORM\Column(type: 'datetime')]
+    #[Groups(['forum:read'])]
     private ?\DateTimeInterface $updatedAt = null;
 
     #[ORM\Column]
+    #[Groups(['forum:read', 'forum:write'])]
     private bool $isSolution = false;
 
     public function __construct()

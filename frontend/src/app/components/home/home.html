@@ -1,24 +1,24 @@
-<h1>{{ title() }}</h1>
-@if (data && data.length > 0) {
+<h1 class="text-4xl mb-6  ">{{ title() }}</h1>
+<div class=" p-6 m-auto ">
 
-<p-card class="card">
-    <p-table [value]="data" [tableStyle]="{ 'min-width': '50rem' }">
-        <ng-template #header>
-            <tr>
-                <th>Nom </th>
-                <th>Code</th>
-                <th>Icon </th>
-            </tr>
-        </ng-template>
-        <ng-template #body let-product>
-            <tr>
-                <td>{{ product.name }}</td>
-                <td>{{ product.code }}</td>
-                <td>{{ product.icon }}</td>
-            </tr>
-        </ng-template>
-    </p-table>
-</p-card>
-} @else {
-<p>Loading subjects...</p>
-}
+  @if (data && data.length > 0) {
+  <ul class=" mt-6   flex flex-wrap  gap-5  ">
+    @for (subject of data; track $index) {
+    <z-card class="w-full max-w-sm shadow-md border-0" [zTitle]="subject?.name" 
+      [zDescription]="subject?.icon"  [attr.data-id]="subject.id">
+      <div class="space-y-4"  >
+          <div class="flex">
+            {{ subject.id }}
+          </div>
+        <div class="space-y-2">
+          <z-button zType="secondary" class="w-full"> Login </z-button>
+          <z-button zType="outline" class="w-full">Login with Google</z-button>
+        </div>
+      </div>
+    </z-card>
+    }
+  </ul>
+  } @else {
+  <p>Loading subjects...</p>
+  }
+</div>

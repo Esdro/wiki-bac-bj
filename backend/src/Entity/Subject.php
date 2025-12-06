@@ -3,25 +3,32 @@
 namespace App\Entity;
 
 use App\Entity\Trait\UuidPrimaryKey;
+use App\Entity\Trait\SlugTrait;
 use App\Repository\SubjectRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Attribute\Groups;
 use Symfony\Component\Uid\Uuid;
 
 #[ORM\Entity(repositoryClass: SubjectRepository::class)]
 #[ORM\Table(name: 'subjects')]
+#[ORM\HasLifecycleCallbacks]
 class Subject
 {
     use UuidPrimaryKey;
+    use SlugTrait;
 
     #[ORM\Column(length: 100)]
+    #[Groups(['subject:read', 'resource:read', 'chapter:read'])]
     private ?string $name = null;
 
     #[ORM\Column(length: 10, unique: true)]
+    #[Groups(['subject:read'])]
     private ?string $code = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['subject:read'])]
     private ?string $icon = null;
 
     /**
@@ -55,6 +62,13 @@ class Subject
         $this->seriesSubjects = new ArrayCollection();
         $this->resources = new ArrayCollection();
         $this->practiceSessions = new ArrayCollection();
+    }
+
+    public function setNameWithSlug(string $name): static
+    {
+        $this->name = $name;
+        $this->setSlug($name);
+        return $this;
     }
 
     public function getId(): ?Uuid

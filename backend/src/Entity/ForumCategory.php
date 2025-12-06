@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Entity\Trait\UuidPrimaryKey;
+use App\Entity\Trait\SlugTrait;
 use App\Repository\ForumCategoryRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -12,9 +13,11 @@ use Symfony\Component\Uid\Uuid;
 
 #[ORM\Entity(repositoryClass: ForumCategoryRepository::class)]
 #[ORM\Table(name: 'forum_categories')]
+#[ORM\HasLifecycleCallbacks]
 class ForumCategory
 {
     use UuidPrimaryKey;
+    use SlugTrait;
 
     #[ORM\Column(length: 100)]
     private ?string $name = null;
@@ -46,6 +49,13 @@ class ForumCategory
         $this->id = Uuid::v7();
         $this->children = new ArrayCollection();
         $this->topics = new ArrayCollection();
+    }
+
+    public function setNameWithSlug(string $name): static
+    {
+        $this->name = $name;
+        $this->setSlug($name);
+        return $this;
     }
 
     public function getId(): ?Uuid

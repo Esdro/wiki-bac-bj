@@ -7,6 +7,7 @@ use App\Repository\RoleRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Attribute\Groups;
 use Symfony\Component\Uid\Uuid;
 
 #[ORM\Entity(repositoryClass: RoleRepository::class)]
@@ -16,12 +17,15 @@ class Role
     use UuidPrimaryKey;
 
     #[ORM\Column(length: 50, unique: true)]
+    #[Groups(['role:read', 'user:read'])]
     private ?string $name = null;
 
     #[ORM\Column(type: 'json', nullable: true)]
+    #[Groups(['role:read'])]
     private ?array $permissions = null;
 
     #[ORM\Column(type: 'datetime_immutable')]
+    #[Groups(['role:read'])]
     private ?\DateTimeImmutable $createdAt = null;
 
     /**

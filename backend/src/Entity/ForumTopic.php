@@ -8,6 +8,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Attribute\Groups;
 use Symfony\Component\Uid\Uuid;
 
 #[ORM\Entity(repositoryClass: ForumTopicRepository::class)]
@@ -19,31 +20,40 @@ class ForumTopic
 
     #[ORM\ManyToOne(targetEntity: ForumCategory::class, inversedBy: 'topics')]
     #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
+    #[Groups(['forum:read'])]
     private ?ForumCategory $category = null;
 
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'forumTopics')]
     #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
+    #[Groups(['forum:read'])]
     private ?User $user = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['forum:read', 'forum:write'])]
     private ?string $title = null;
 
     #[ORM\Column(type: Types::TEXT)]
+    #[Groups(['forum:read', 'forum:write'])]
     private ?string $content = null;
 
     #[ORM\Column(type: 'datetime_immutable')]
+    #[Groups(['forum:read'])]
     private ?\DateTimeImmutable $createdAt = null;
 
     #[ORM\Column(type: 'datetime')]
+    #[Groups(['forum:read'])]
     private ?\DateTimeInterface $updatedAt = null;
 
     #[ORM\Column]
+    #[Groups(['forum:read'])]
     private int $viewCount = 0;
 
     #[ORM\Column]
+    #[Groups(['forum:read', 'forum:write'])]
     private bool $isPinned = false;
 
     #[ORM\Column]
+    #[Groups(['forum:read', 'forum:write'])]
     private bool $isLocked = false;
 
     #[ORM\ManyToOne(targetEntity: ForumPost::class)]

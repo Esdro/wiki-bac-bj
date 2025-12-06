@@ -1,20 +1,22 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { ServerResponseData } from '../../interfaces/server-response-data';
-import { TableModule } from 'primeng/table';
-import { CommonModule } from '@angular/common';
-import { Card } from 'primeng/card';
+import { ZardCardComponent } from '@shared/components/card/card.component';
+import { ZardButtonComponent } from '@shared/components/button/button.component';
+import { generateId } from '@shared/utils/merge-classes';
 
 @Component({
   selector: 'app-home',
-  imports: [TableModule, CommonModule, Card],
+  imports: [ZardCardComponent, ZardButtonComponent],
   templateUrl: './home.html',
-  styleUrls: ['./home.css'],
+  styleUrl: './home.css',
 })
 export class Home implements OnInit {
+  protected readonly idEmail = generateId('email');
+  protected readonly idPassword = generateId('password');
 
   protected readonly title = signal<string>('wikibac Frontend');
-  data! : null | ServerResponseData['data'];
+  data!: null | ServerResponseData['data'];
 
   private readonly http = inject(HttpClient);
 
@@ -25,5 +27,9 @@ export class Home implements OnInit {
       this.title.set('wikibac Frontend - ' + serverResponse.message);
       this.data = serverResponse.data;
     });
+    this.http.get<ServerResponseData>('http://localhost:8998/api/users').subscribe(serverResponse => {
+      console.log(serverResponse);
+    });
   }
 }
+

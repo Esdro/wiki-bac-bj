@@ -3,11 +3,13 @@
 namespace App\Entity;
 
 use App\Entity\Trait\UuidPrimaryKey;
+use App\Entity\Trait\SlugTrait;
 use App\Repository\ResourceRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Attribute\Groups;
 use Symfony\Component\Uid\Uuid;
 
 #[ORM\Entity(repositoryClass: ResourceRepository::class)]
@@ -16,58 +18,75 @@ use Symfony\Component\Uid\Uuid;
 class Resource
 {
     use UuidPrimaryKey;
+    use SlugTrait;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['resource:read', 'resource:write', 'user:read'])]
     private ?string $title = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
+    #[Groups(['resource:read', 'resource:write'])]
     private ?string $description = null;
 
     #[ORM\ManyToOne(targetEntity: ResourceType::class, inversedBy: 'resources')]
     #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
+    #[Groups(['resource:read'])]
     private ?ResourceType $type = null;
 
     #[ORM\ManyToOne(targetEntity: Subject::class, inversedBy: 'resources')]
     #[ORM\JoinColumn(onDelete: 'SET NULL')]
+    #[Groups(['resource:read'])]
     private ?Subject $subject = null;
 
     #[ORM\ManyToOne(targetEntity: Chapter::class, inversedBy: 'resources')]
     #[ORM\JoinColumn(onDelete: 'SET NULL')]
+    #[Groups(['resource:read'])]
     private ?Chapter $chapter = null;
 
     #[ORM\ManyToOne(targetEntity: Series::class, inversedBy: 'resources')]
     #[ORM\JoinColumn(onDelete: 'SET NULL')]
+    #[Groups(['resource:read'])]
     private ?Series $series = null;
 
     #[ORM\Column(nullable: true)]
+    #[Groups(['resource:read', 'resource:write'])]
     private ?int $year = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['resource:read', 'resource:write'])]
     private ?string $fileUrl = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['resource:read', 'resource:write'])]
     private ?string $thumbnailUrl = null;
 
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'resources')]
     #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
+    #[Groups(['resource:read'])]
     private ?User $user = null;
 
     #[ORM\Column(length: 20)]
+    #[Groups(['resource:read', 'resource:write'])]
     private string $status = 'draft';
 
     #[ORM\Column]
+    #[Groups(['resource:read'])]
     private int $viewCount = 0;
 
     #[ORM\Column]
+    #[Groups(['resource:read'])]
     private int $downloadCount = 0;
 
     #[ORM\Column(type: 'decimal', precision: 3, scale: 2, nullable: true)]
+    #[Groups(['resource:read'])]
     private ?string $averageRating = null;
 
     #[ORM\Column(type: 'datetime_immutable')]
+    #[Groups(['resource:read'])]
     private ?\DateTimeImmutable $createdAt = null;
 
     #[ORM\Column(type: 'datetime')]
+    #[Groups(['resource:read'])]
     private ?\DateTimeInterface $updatedAt = null;
 
     /**
@@ -101,6 +120,13 @@ class Resource
         $this->ratings = new ArrayCollection();
         $this->createdAt = new \DateTimeImmutable();
         $this->updatedAt = new \DateTime();
+    }
+
+    public function setTitleWithSlug(string $title): static
+    {
+        $this->title = $title;
+        $this->setSlug($title);
+        return $this;
     }
 
     #[ORM\PreUpdate]

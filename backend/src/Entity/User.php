@@ -10,6 +10,7 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Serializer\Attribute\Groups;
 use Symfony\Component\Uid\Uuid;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
@@ -21,40 +22,50 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     use UuidPrimaryKey;
 
     #[ORM\Column(length: 100, unique: true)]
+    #[Groups(['user:read', 'user:write', 'resource:read', 'forum:read', 'rating:read'])]
     private ?string $email = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $password = null; // Renommé de passwordHash pour interface Symfony
+    #[ORM\Column(name: 'password_hash', length: 255)]
+    private ?string $password = null;
 
     #[ORM\Column(length: 50, unique: true)]
+    #[Groups(['user:read', 'user:write', 'resource:read', 'forum:read', 'rating:read'])]
     private ?string $username = null;
 
     #[ORM\Column(length: 100, nullable: true)]
+    #[Groups(['user:read', 'user:write', 'resource:read', 'forum:read'])]
     private ?string $fullName = null;
 
     #[ORM\ManyToOne(targetEntity: Role::class, inversedBy: 'users')]
     #[ORM\JoinColumn(name: 'role_id', referencedColumnName: 'id', onDelete: 'SET NULL')]
+    #[Groups(['user:read'])]
     private ?Role $role = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['user:read', 'user:write'])]
     private ?string $avatarUrl = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
+    #[Groups(['user:read', 'user:write'])]
     private ?string $bio = null;
 
     #[ORM\Column(type: 'datetime_immutable')]
+    #[Groups(['user:read'])]
     private ?\DateTimeImmutable $createdAt = null;
 
     #[ORM\Column(type: 'datetime', nullable: true)]
+    #[Groups(['user:read'])]
     private ?\DateTimeInterface $lastLogin = null;
 
     #[ORM\Column(length: 20)]
+    #[Groups(['user:read', 'user:write'])]
     private string $status = 'active';
 
     /**
      * @var Collection<int, Resource>
      */
     #[ORM\OneToMany(targetEntity: Resource::class, mappedBy: 'user', cascade: ['persist', 'remove'])]
+    #[Groups(['user:read'])]
     private Collection $resources;
 
     /**

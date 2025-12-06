@@ -3,30 +3,38 @@
 namespace App\Entity;
 
 use App\Entity\Trait\UuidPrimaryKey;
+use App\Entity\Trait\SlugTrait;
 use App\Repository\ChapterRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Attribute\Groups;
 use Symfony\Component\Uid\Uuid;
 
 #[ORM\Entity(repositoryClass: ChapterRepository::class)]
 #[ORM\Table(name: 'chapters')]
+#[ORM\HasLifecycleCallbacks]
 class Chapter
 {
     use UuidPrimaryKey;
+    use SlugTrait;
 
     #[ORM\ManyToOne(targetEntity: Subject::class, inversedBy: 'chapters')]
     #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
+    #[Groups(['chapter:read', 'resource:read'])]
     private ?Subject $subject = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['chapter:read', 'resource:read'])]
     private ?string $title = null;
 
     #[ORM\Column]
+    #[Groups(['chapter:read'])]
     private ?int $orderNum = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
+    #[Groups(['chapter:read'])]
     private ?string $description = null;
 
     /**
@@ -46,6 +54,13 @@ class Chapter
         $this->id = Uuid::v7();
         $this->resources = new ArrayCollection();
         $this->progressEntries = new ArrayCollection();
+    }
+
+    public function setTitleWithSlug(string $title): static
+    {
+        $this->title = $title;
+        $this->setSlug($title);
+        return $this;
     }
 
     public function getId(): ?Uuid
