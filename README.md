@@ -53,6 +53,53 @@ Ce projet ne pourra réussir que grâce à la contribution de chacun. Voici comm
 3. **Participez au développement** : si vous avez des compétences en développement web, design ou rédaction
 4. **Faites passer le mot** : parlez de cette initiative autour de vous
 
+---
+
+## 🚀 Installation et Configuration
+
+### Prérequis
+
+- Docker et Docker Compose
+- PHP 8.2+ (pour développement local)
+- Node.js 18+ (pour le frontend)
+- PostgreSQL 15+ (inclus dans Docker)
+
+### Configuration des variables d'environnement
+
+Les fichiers de configuration sensibles (`.env`, `.env.local`, etc.) **ne doivent JAMAIS être commités** dans le repository.
+
+#### Backend (Symfony)
+
+1. Copiez le fichier template :
+```bash
+cp backend/.env.example backend/.env.local
+```
+
+2. Configurez les variables dans `backend/.env.local` :
+```env
+APP_ENV=dev
+APP_SECRET=your_secret_key_here
+DATABASE_URL="postgresql://user:password@database:5432/wikibac"
+```
+
+> ⚠️ **IMPORTANT** : Chaque développeur doit avoir son propre fichier `.env.local` avec ses propres valeurs. Ces fichiers sont ignorés par git.
+
+#### Frontend (Angular)
+
+Les variables d'environnement du frontend sont gérées dans `frontend/src/environments/`.
+
+### Démarrage avec Docker
+
+```bash
+# Lancer tous les services
+docker-compose up -d
+
+# Backend sera accessible à : http://localhost:8000
+# Frontend sera accessible à : http://localhost:4200
+```
+
+---
+
 ## 📅 Feuille de route du projet
 
 | Phase | Période | Objectifs |
