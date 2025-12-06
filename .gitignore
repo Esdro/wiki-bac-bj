@@ -2,8 +2,9 @@
 .env
 .env.local
 .env.*.local
-*.env
-!*.env.example
+.env.*
+!.env.example
+!.env.*.example
 
 # Docker volumes data
 docker/postgres-init/data/
@@ -12,7 +13,7 @@ docker/postgres-init/data/
 docker-compose.yml
 
 # Backend
-/backend/.env
+/backend/.env.dev
 /backend/.env.local
 /backend/.env.local.php
 /backend/.env.*.local
