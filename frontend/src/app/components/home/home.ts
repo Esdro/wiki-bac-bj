@@ -3,10 +3,11 @@ import { Component, inject, OnInit, signal } from '@angular/core';
 import { ServerResponseData } from '../../interfaces/server-response-data';
 import { TableModule } from 'primeng/table';
 import { CommonModule } from '@angular/common';
+import { Card } from 'primeng/card';
 
 @Component({
   selector: 'app-home',
-  imports: [TableModule, CommonModule],
+  imports: [TableModule, CommonModule, Card],
   templateUrl: './home.html',
   styleUrls: ['./home.css'],
 })
