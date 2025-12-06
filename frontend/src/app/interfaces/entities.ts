@@ -85,6 +85,7 @@ export interface IUpdateUserDto {
 export interface IResourceType {
   id: string; // UUID v7
   name: string;
+  slug?: string | null;
   description?: string | null;
   createdAt?: string; // ISO 8601 datetime
   resources?: IResource[];
@@ -92,11 +93,13 @@ export interface IResourceType {
 
 export interface ICreateResourceTypeDto {
   name: string;
+  slug?: string;
   description?: string;
 }
 
 export interface IUpdateResourceTypeDto {
   name?: string;
+  slug?: string;
   description?: string;
 }
 
@@ -107,16 +110,18 @@ export interface IUpdateResourceTypeDto {
 export interface ITag {
   id: string; // UUID v7
   name: string;
-  slug?: string;
+  slug?: string | null;
   resourceTags?: IResourceTag[];
 }
 
 export interface ICreateTagDto {
   name: string;
+  slug?: string;
 }
 
 export interface IUpdateTagDto {
   name?: string;
+  slug?: string;
 }
 
 // ============================================================================
@@ -127,7 +132,7 @@ export interface ISubject {
   id: string; // UUID v7
   name: string;
   code: string;
-  slug?: string;
+  slug?: string | null;
   icon?: string | null;
   chapters?: IChapter[];
   seriesSubjects?: ISeriesSubject[];
@@ -138,12 +143,14 @@ export interface ISubject {
 export interface ICreateSubjectDto {
   name: string;
   code: string;
+  slug?: string;
   icon?: string;
 }
 
 export interface IUpdateSubjectDto {
   name?: string;
   code?: string;
+  slug?: string;
   icon?: string;
 }
 
@@ -154,7 +161,7 @@ export interface IUpdateSubjectDto {
 export interface IChapter {
   id: string; // UUID v7
   title: string;
-  slug?: string;
+  slug?: string | null;
   subject: ISubject;
   orderNum?: number | null;
   description?: string | null;
@@ -165,6 +172,7 @@ export interface IChapter {
 export interface ICreateChapterDto {
   title: string;
   subjectId: string;
+  slug?: string;
   orderNum?: number;
   description?: string;
 }
@@ -172,6 +180,7 @@ export interface ICreateChapterDto {
 export interface IUpdateChapterDto {
   title?: string;
   subjectId?: string;
+  slug?: string;
   orderNum?: number;
   description?: string;
 }
@@ -184,7 +193,7 @@ export interface ISeries {
   id: string; // UUID v7
   name: string;
   code: string;
-  slug?: string;
+  slug?: string | null;
   description?: string | null;
   seriesSubjects?: ISeriesSubject[];
   resources?: IResource[];
@@ -193,12 +202,14 @@ export interface ISeries {
 export interface ICreateSeriesDto {
   name: string;
   code: string;
+  slug?: string;
   description?: string;
 }
 
 export interface IUpdateSeriesDto {
   name?: string;
   code?: string;
+  slug?: string;
   description?: string;
 }
 
@@ -228,7 +239,7 @@ export interface ICreateSeriesSubjectDto {
 export interface IResource {
   id: string; // UUID v7
   title: string;
-  slug?: string;
+  slug?: string | null;
   description?: string | null;
   type: IResourceType;
   subject?: ISubject | null;
@@ -255,6 +266,7 @@ export interface IResource {
 
 export interface ICreateResourceDto {
   title: string;
+  slug?: string;
   description?: string;
   typeId: string;
   subjectId?: string;
@@ -268,6 +280,7 @@ export interface ICreateResourceDto {
 
 export interface IUpdateResourceDto {
   title?: string;
+  slug?: string;
   description?: string;
   typeId?: string;
   subjectId?: string;
@@ -506,7 +519,7 @@ export interface IUpdateUserProgressDto {
 export interface IForumCategory {
   id: string; // UUID v7
   name: string;
-  slug?: string;
+  slug?: string | null;
   description?: string | null;
   orderNum?: number | null;
   topics?: IForumTopic[];
@@ -514,12 +527,14 @@ export interface IForumCategory {
 
 export interface ICreateForumCategoryDto {
   name: string;
+  slug?: string;
   description?: string;
   orderNum?: number;
 }
 
 export interface IUpdateForumCategoryDto {
   name?: string;
+  slug?: string;
   description?: string;
   orderNum?: number;
 }
