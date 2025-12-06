@@ -9,8 +9,11 @@
 # Docker volumes data
 docker/postgres-init/data/
 
-# docker compose override files
+# Docker
 docker-compose.yml
+docker-compose.override.yml
+!docker-compose.yml.example
+!docker-compose.override.yaml
 
 # Backend
 /backend/.env.dev
