@@ -7,6 +7,7 @@ use App\Repository\ExamPaperRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Attribute\Groups;
 use Symfony\Component\Uid\Uuid;
 
 #[ORM\Entity(repositoryClass: ExamPaperRepository::class)]
@@ -17,12 +18,15 @@ class ExamPaper
 
     #[ORM\OneToOne(targetEntity: Resource::class, inversedBy: 'examPaper')]
     #[ORM\JoinColumn(nullable: false, unique: true, onDelete: 'CASCADE')]
+    #[Groups(['exam_paper:read', 'solutionread'])]
     private ?Resource $resource = null;
 
     #[ORM\Column(length: 50, nullable: true)]
+    #[Groups(['exam_paper:read', 'solutionread'])]
     private ?string $examType = null;
 
     #[ORM\Column(nullable: true)]
+    #[Groups(['exam_paper:read', 'solutionread'])]
     private ?int $durationMinutes = null;
 
     /**

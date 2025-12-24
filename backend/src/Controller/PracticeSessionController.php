@@ -28,7 +28,7 @@ class PracticeSessionController extends AbstractController
     public function list(): JsonResponse
     {
         $sessions = $this->repository->findAll();
-        return $this->json($sessions);
+        return $this->json($sessions, 200, [], ['groups' => 'practice_session:read']);
     }
 
     #[Route('/{id}', name: 'show', methods: ['GET'])]

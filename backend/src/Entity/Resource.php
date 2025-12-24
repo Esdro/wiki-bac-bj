@@ -11,10 +11,13 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Attribute\Groups;
 use Symfony\Component\Uid\Uuid;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 #[ORM\Entity(repositoryClass: ResourceRepository::class)]
 #[ORM\Table(name: 'resources')]
 #[ORM\HasLifecycleCallbacks]
+#[UniqueEntity(fields: ['title'], message: 'Ce titre existe déjà')]
 class Resource
 {
     use UuidPrimaryKey;
@@ -22,15 +25,27 @@ class Resource
 
     #[ORM\Column(length: 255)]
     #[Groups(['resource:read', 'resource:write', 'user:read'])]
+    #[Assert\NotBlank(message: 'Le titre est obligatoire')]
+    #[Assert\Length(
+        min: 3,
+        max: 255,
+        minMessage: 'Le titre doit contenir au moins {{ limit }} caractères',
+        maxMessage: 'Le titre ne peut pas dépasser {{ limit }} caractères'
+    )]
     private ?string $title = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     #[Groups(['resource:read', 'resource:write'])]
+    #[Assert\Length(
+        max: 8000,
+        maxMessage: 'La description ne peut pas dépasser {{ limit }} caractères'
+    )]
     private ?string $description = null;
 
     #[ORM\ManyToOne(targetEntity: ResourceType::class, inversedBy: 'resources')]
     #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     #[Groups(['resource:read'])]
+    #[Assert\NotNull(message: 'Le type de ressource est obligatoire')]
     private ?ResourceType $type = null;
 
     #[ORM\ManyToOne(targetEntity: Subject::class, inversedBy: 'resources')]
@@ -50,35 +65,65 @@ class Resource
 
     #[ORM\Column(nullable: true)]
     #[Groups(['resource:read', 'resource:write'])]
+    #[Assert\Type(type: 'integer', message: 'L\'année doit être un nombre entier')]
+    #[Assert\Positive(message: 'L\'année doit être positive')]
+    #[Assert\Range(
+        notInRangeMessage: 'L\'année doit être entre {{ min }} et {{ max }}',
+        min: 1900,
+        max: 2100
+    )]
     private ?int $year = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     #[Groups(['resource:read', 'resource:write'])]
+    #[Assert\Url(message: 'L\'URL du fichier n\'est pas valide')]
+    #[Assert\Length(
+        max: 255,
+        maxMessage: 'L\'URL du fichier ne peut pas dépasser {{ limit }} caractères'
+    )]
     private ?string $fileUrl = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     #[Groups(['resource:read', 'resource:write'])]
+    #[Assert\Url(message: 'L\'URL de la miniature n\'est pas valide')]
+    #[Assert\Length(
+        max: 255,
+        maxMessage: 'L\'URL de la miniature ne peut pas dépasser {{ limit }} caractères'
+    )]
     private ?string $thumbnailUrl = null;
 
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'resources')]
     #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     #[Groups(['resource:read'])]
+    #[Assert\NotNull(message: 'L\'utilisateur est obligatoire')]
     private ?User $user = null;
 
     #[ORM\Column(length: 20)]
     #[Groups(['resource:read', 'resource:write'])]
+    #[Assert\NotBlank(message: 'Le statut est obligatoire')]
+    #[Assert\Choice(
+        choices: ['draft', 'published', 'review'],
+        message: 'Le statut doit être "draft", "published" ou "review"'
+    )]
     private string $status = 'draft';
 
     #[ORM\Column]
     #[Groups(['resource:read'])]
+    #[Assert\PositiveOrZero(message: 'Le nombre de vues doit être positif ou zéro')]
     private int $viewCount = 0;
 
     #[ORM\Column]
     #[Groups(['resource:read'])]
+    #[Assert\PositiveOrZero(message: 'Le nombre de téléchargements doit être positif ou zéro')]
     private int $downloadCount = 0;
 
     #[ORM\Column(type: 'decimal', precision: 3, scale: 2, nullable: true)]
     #[Groups(['resource:read'])]
+    #[Assert\Range(
+        notInRangeMessage: 'La note moyenne doit être entre {{ min }} et {{ max }}',
+        min: 0,
+        max: 5
+    )]
     private ?string $averageRating = null;
 
     #[ORM\Column(type: 'datetime_immutable')]
@@ -120,6 +165,7 @@ class Resource
         $this->ratings = new ArrayCollection();
         $this->createdAt = new \DateTimeImmutable();
         $this->updatedAt = new \DateTime();
+        $this->averageRating = 0.0;
     }
 
     public function setTitleWithSlug(string $title): static

@@ -1,0 +1,11 @@
+<z-empty
+      zImage="images/avatar/imgs/avatar_image.jpg"
+      zTitle="Oups ! 404 Error"
+      zDescription="The page you are looking for does not exist. It might have been moved or deleted."
+      [zActions]="[actionPrimary]"
+      class="[&_img]:size-12 [&_img]:rounded-full [&_img]:grayscale [&_div]:gap-4 [&_div]:flex [&_div]:flex-col [&_div]:items-center [&_div]:justify-center [&_div]:text-3xl [&_div]:font-bold "
+    />
+ 
+    <ng-template #actionPrimary>
+      <button z-button routerLink="/" zType="link">Go Home</button>
+    </ng-template>

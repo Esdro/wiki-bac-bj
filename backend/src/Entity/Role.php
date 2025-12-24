@@ -17,15 +17,15 @@ class Role
     use UuidPrimaryKey;
 
     #[ORM\Column(length: 50, unique: true)]
-    #[Groups(['role:read', 'user:read'])]
+    #[Groups(['role:read', 'user:role', 'practice_session:read'])]
     private ?string $name = null;
 
     #[ORM\Column(type: 'json', nullable: true)]
-    #[Groups(['role:read'])]
+    #[Groups(['role:read', 'user:role' ,'practice_session:read'])]
     private ?array $permissions = null;
 
     #[ORM\Column(type: 'datetime_immutable')]
-    #[Groups(['role:read'])]
+    #[Groups(['role:read', 'user:role' ,'practice_session:read'])]
     private ?\DateTimeImmutable $createdAt = null;
 
     /**

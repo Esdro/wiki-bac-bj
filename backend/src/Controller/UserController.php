@@ -9,7 +9,9 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Uid\Uuid;
 
 #[Route('/api/users', name: 'api_users_')]
@@ -17,7 +19,9 @@ class UserController extends AbstractController
 {
     public function __construct(
         private EntityManagerInterface $entityManager,
-        private UserRepository $repository
+        private UserRepository $repository,
+        private SerializerInterface $serializer,
+        private UserPasswordHasherInterface $passwordHasher,
     ) {}
 
     #[Route('', name: 'list', methods: ['GET'])]
@@ -33,10 +37,8 @@ class UserController extends AbstractController
     }
 
     #[Route('/{id}', name: 'show', methods: ['GET'])]
-    public function show(string $id): JsonResponse
+    public function show(User $user): JsonResponse
     {
-        $user = $this->repository->find(Uuid::fromString($id));
-
         if (!$user) {
             return $this->json(['error' => 'User not found'], Response::HTTP_NOT_FOUND);
         }
@@ -49,13 +51,28 @@ class UserController extends AbstractController
     {
         $data = json_decode($request->getContent(), true);
 
-        $user = new User();
-        $user->setEmail($data['email'] ?? null);
-        $user->setUsername($data['username'] ?? null);
-        $user->setFullName($data['fullName'] ?? null);
-
+        $user = $this->serializer->deserialize($request->getContent(), User::class, 'json', [
+            'groups' => ['user:write'],
+        ]);
+        
         if (isset($data['password'])) {
-            $user->setPassword($data['password']);
+            $plainPassword = $data['password'];
+            if (strlen($plainPassword) < 6) {
+                return $this->json(['error' => 'Password must be at least 6 characters long'], Response::HTTP_BAD_REQUEST);
+            }
+
+            if (!preg_match('/[A-Z]/', $plainPassword) ||
+                !preg_match('/[a-z]/', $plainPassword) ||
+                !preg_match('/[0-9]/', $plainPassword) ) {
+                return $this->json(['error' => 'Password must contain at least one uppercase letter, one lowercase letter, and one number'], Response::HTTP_BAD_REQUEST);
+            }
+
+            // on vérifie si le mot de passe est déjà hashé (ce qui serait le cas s'il vient d'être créé)
+            if ($this->passwordHasher->isPasswordValid($user, $plainPassword)) {
+                return $this->json(['error' => 'Password is already hashed'], Response::HTTP_BAD_REQUEST);
+            }
+
+            $user->setPassword($this->passwordHasher->hashPassword($user, $plainPassword));
         }
 
         $this->entityManager->persist($user);
@@ -107,4 +124,48 @@ class UserController extends AbstractController
 
         return $this->json(null, Response::HTTP_NO_CONTENT);
     }
+
+
+    // login route 
+
+    #[Route('/login', name: 'login', methods: ['POST'])]
+    public function login(Request $request): JsonResponse
+    {
+        $data = json_decode($request->getContent(), true);
+
+        $username = $data['username'] ?? null;
+        $password = $data['password'] ?? null;
+
+        if (!$username || !$password) {
+            return $this->json(['error' => 'Username and password are required'], Response::HTTP_BAD_REQUEST);
+        }
+
+        $user = $this->repository->findOneBy(['username' => $username]);
+
+        if (!$user) {
+            return $this->json(['error' => 'Invalid credentials'], Response::HTTP_UNAUTHORIZED);
+        }
+
+        if (!$this->passwordHasher->isPasswordValid($user, $password)) {
+            return $this->json(['error' => 'Invalid credentials'], Response::HTTP_UNAUTHORIZED);
+        }
+
+        // Generate a token or use JWT or any other method
+        $token = bin2hex(random_bytes(16));
+
+        // You should save the token in the database or cache with an expiration time
+
+        $data = [
+            'token' => $token,
+            'user' => [
+                'id' => $user->getId(),
+                'username' => $user->getUsername(),
+                'email' => $user->getEmail(),
+            ],
+        ];
+
+        return $this->json($data, Response::HTTP_OK);
+    }
+
+
 }

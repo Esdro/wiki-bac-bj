@@ -1,0 +1,9 @@
+@if (currentUser() != null) {
+<z-card class="w-2xl max-w-5xl min-h-90" zTitle="My Profile" zDescription="View and manage your account details">
+    <div class="flex flex-col mb-4">
+        <p class="mb-2"><strong>Username:</strong> {{ currentUser()?.user?.username }}</p>
+        <p class="mb-2"><strong>Email:</strong> {{ currentUser()?.user?.email }}</p>
+    </div>
+    <button z-button zType="destructive" (click)="logout()">Logout</button>
+</z-card>
+} 

@@ -1,0 +1,26 @@
+<header class="flex items-center justify-between p-4 shadow-md h-[90px] flex-1">
+    <div class="flex max-w-5xl w-full items-center justify-between mx-auto">
+
+        <h1 routerLink="/" class=" text-4xl font-bold cursor-pointer">Wiki Bac BJ</h1>
+        <ul class="flex gap-4 items-center ">
+            <li><a routerLink="/subjects" routerLinkActive="active">Subjects</a></li>
+            <li>
+                <a routerLink="/user/auth" routerLinkActive="active"  >Auth</a>
+            </li>
+            <li>
+                <a routerLink="/user/profile" routerLinkActive="active">My Profile</a>
+            </li>
+              <li>
+                <button z-button zType="secondary" z-dropdown [zDropdownMenu]="menu"> Change Theme <i z-icon [zType]="currentTheme()"></i>  </button>
+                <z-dropdown-menu-content #menu="zDropdownMenuContent" class="flex flex-col gap-2 p-4">
+                    <z-dropdown-menu-item z-button zType="outline" size="md" (click)="setLightMode()" [disabled]="isCurrentTheme('light')"> <z-icon
+                            zType="sun"></z-icon> Light </z-dropdown-menu-item>
+                    <z-dropdown-menu-item z-button zType="outline" size="md" (click)="setDarkMode()" [disabled]="isCurrentTheme('dark')"> <z-icon
+                            zType="moon"></z-icon> Dark </z-dropdown-menu-item>
+                    <z-dropdown-menu-item z-button zType="outline" size="md" (click)="setSystemMode()" [disabled]="isCurrentTheme('system')"> <z-icon
+                            zType="settings"></z-icon> System </z-dropdown-menu-item>
+                </z-dropdown-menu-content>
+            </li>
+        </ul>
+    </div>
+</header>

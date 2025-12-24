@@ -10,6 +10,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Uid\Uuid;
+use Symfony\Component\Serializer\Attribute\Groups;
 
 #[ORM\Entity(repositoryClass: SeriesRepository::class)]
 #[ORM\Table(name: 'series')]
@@ -17,15 +18,17 @@ use Symfony\Component\Uid\Uuid;
 class Series
 {
     use UuidPrimaryKey;
-    use SlugTrait;
 
     #[ORM\Column(length: 10, unique: true)]
+    #[Groups(['series:read', 'series:write', 'resource:read'])]
     private ?string $code = null;
 
     #[ORM\Column(length: 100)]
+    #[Groups(['series:read', 'series:write', 'resource:read'])]
     private ?string $name = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
+    #[Groups(['series:read', 'series:write', 'resource:read'])]
     private ?string $description = null;
 
     /**
@@ -45,13 +48,6 @@ class Series
         $this->id = Uuid::v7();
         $this->seriesSubjects = new ArrayCollection();
         $this->resources = new ArrayCollection();
-    }
-
-    public function setNameWithSlug(string $name): static
-    {
-        $this->name = $name;
-        $this->setSlug($name);
-        return $this;
     }
 
     public function getId(): ?Uuid

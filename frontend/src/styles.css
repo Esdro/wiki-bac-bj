@@ -1,10 +1,15 @@
-/* You can add global styles to this file, and also import other style files */
 @import 'tailwindcss';
-
-/* @import 'lucide-static/font/lucide.css'; */
 @plugin "tailwindcss-animate";
 
 @custom-variant dark (&:is(.dark *));
+
+body {
+  font-family: "Aeonik", sans-serif;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
 
 :root {
   --radius: 0.625rem;
@@ -57,8 +62,8 @@
   --accent: oklch(0.269 0 0);
   --accent-foreground: oklch(0.985 0 0);
   --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
+  --border: oklch(0.3 0 0);
+  --input: oklch(0.3 0 0);
   --ring: oklch(0.556 0 0);
   --chart-1: oklch(0.488 0.243 264.376);
   --chart-2: oklch(0.696 0.17 162.48);
@@ -71,7 +76,7 @@
   --sidebar-primary-foreground: oklch(0.985 0 0);
   --sidebar-accent: oklch(0.269 0 0);
   --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(1 0 0 / 10%);
+  --sidebar-border: oklch(0.3 0 0);
   --sidebar-ring: oklch(0.556 0 0);
 }
 
@@ -91,7 +96,6 @@
   --color-accent: var(--accent);
   --color-accent-foreground: var(--accent-foreground);
   --color-destructive: var(--destructive);
-  --color-destructive-foreground: var(--destructive-foreground);
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
@@ -114,12 +118,37 @@
   --color-sidebar-ring: var(--sidebar-ring);
 }
 
-@theme {
-  --color-warning: oklch(0.84 0.16 84);
-  --color-warning-foreground: oklch(0.28 0.07 46);
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+
+    input[type="number"]::-webkit-inner-spin-button,
+  input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  input[type="number"] {
+    -moz-appearance: textfield;
+    appearance: textfield; /* Added for general compatibility */
+  }
+}
+  
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
 }
 
-@theme dark {
-  --color-warning: oklch(0.41 0.11 46);
-  --color-warning-foreground: oklch(0.99 0.02 95);
+::-webkit-scrollbar-thumb {
+  background: var(--muted-foreground);
+  border-radius: 5px;
 }
+
+::-webkit-scrollbar-track {
+  border-radius: 5px;
+  background: var(--muted);
+}  

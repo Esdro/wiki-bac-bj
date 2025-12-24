@@ -3,10 +3,12 @@
 namespace App\Entity\Trait;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Attribute\Groups;
 
 trait SlugTrait
 {
     #[ORM\Column(length: 255, unique: true)]
+    #[Groups(['chapter:read', 'subject:read', 'tag:read', 'resource:read'])]
     private ?string $slug = null;
 
     public function getSlug(): ?string

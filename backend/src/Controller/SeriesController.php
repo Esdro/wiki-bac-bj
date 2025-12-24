@@ -10,28 +10,33 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Uid\Uuid;
 
 #[Route('/api/series', name: 'api_series_')]
 class SeriesController extends AbstractController
 {
     public function __construct(
-        private EntityManagerInterface $entityManager,
-        private SeriesRepository $repository
+        private readonly EntityManagerInterface $entityManager,
+        private readonly SeriesRepository $repository,
+        private readonly SerializerInterface $serializer
     ) {}
 
     #[Route('', name: 'list', methods: ['GET'])]
     public function list(): JsonResponse
     {
+
         $series = $this->repository->findAll();
-        return $this->json($series);
+        $series = $this->serializer->serialize($series, 'json', ['groups' => ['series:read']]);
+
+        return new JsonResponse($series, Response::HTTP_OK, [], true);
     }
 
     #[Route('/{id}', name: 'show', methods: ['GET'])]
     public function show(string $id): JsonResponse
     {
         $series = $this->repository->find(Uuid::fromString($id));
-        
+
         if (!$series) {
             return $this->json(['error' => 'Series not found'], Response::HTTP_NOT_FOUND);
         }
@@ -43,9 +48,9 @@ class SeriesController extends AbstractController
     public function create(Request $request): JsonResponse
     {
         $data = json_decode($request->getContent(), true);
-        
+
         $series = new Series();
-        $series->setNameWithSlug($data['name'] ?? null);
+        $series->setName($data['name'] ?? null);
         $series->setCode($data['code'] ?? null);
 
         $this->entityManager->persist($series);
@@ -58,13 +63,13 @@ class SeriesController extends AbstractController
     public function update(string $id, Request $request): JsonResponse
     {
         $series = $this->repository->find(Uuid::fromString($id));
-        
+
         if (!$series) {
             return $this->json(['error' => 'Series not found'], Response::HTTP_NOT_FOUND);
         }
 
         $data = json_decode($request->getContent(), true);
-        
+
         if (isset($data['name'])) {
             $series->setNameWithSlug($data['name']);
         }
@@ -78,9 +83,9 @@ class SeriesController extends AbstractController
     }
 
     #[Route('/{id}', name: 'delete', methods: ['DELETE'])]
-    public function delete(string $id): JsonResponse
+    public function delete(Series $id): JsonResponse
     {
-        $series = $this->repository->find(Uuid::fromString($id));
+        $series = $this->repository->find($id);
         
         if (!$series) {
             return $this->json(['error' => 'Series not found'], Response::HTTP_NOT_FOUND);

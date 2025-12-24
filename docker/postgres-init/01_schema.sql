@@ -57,8 +57,7 @@ CREATE TABLE series (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     code VARCHAR(10) NOT NULL UNIQUE,
     name VARCHAR(100) NOT NULL,
-    description TEXT,
-    slug VARCHAR(255)
+    description TEXT
 );
 CREATE TABLE series_subjects (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
@@ -81,13 +80,13 @@ CREATE TABLE chapters (
 CREATE TABLE resource_types (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     name VARCHAR(50) NOT NULL UNIQUE,
-    description TEXT,
-    slug VARCHAR(255)
+    description TEXT
 );
 CREATE TABLE resources (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     title VARCHAR(255) NOT NULL,
     description TEXT,
+    slug VARCHAR(255),
     type_id UUID NOT NULL,
     subject_id UUID,
     chapter_id UUID,
@@ -99,8 +98,7 @@ CREATE TABLE resources (
     status resource_status_enum NOT NULL DEFAULT 'draft',
     view_count INTEGER NOT NULL DEFAULT 0,
     download_count INTEGER NOT NULL DEFAULT 0,
-    average_rating DECIMAL(3, 2),
-    slug VARCHAR(255),
+    average_rating DECIMAL(3, 2) DEFAULT 0.00,
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (type_id) REFERENCES resource_types(id) ON DELETE CASCADE,

@@ -6,6 +6,7 @@ export interface ServerResponseData<T = any> {
   status?: number;
   message?: string;
   data?: T;
+  totalCount?: number;
 }
 
 /**
@@ -15,6 +16,7 @@ export interface ApiResponse<T> {
   status: number;
   message?: string;
   data: T;
+  totalCount?: number;
 }
 
 /**
@@ -24,7 +26,7 @@ export interface ApiErrorResponse {
   status: number;
   message: string;
   error: string;
-  details?: Record<string, any>;
+  details?: Record<any, any>;
 }
 
 /**

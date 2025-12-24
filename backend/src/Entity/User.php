@@ -22,27 +22,27 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     use UuidPrimaryKey;
 
     #[ORM\Column(length: 100, unique: true)]
-    #[Groups(['user:read', 'user:write', 'resource:read', 'forum:read', 'rating:read'])]
+    #[Groups(['user:read', 'user:write', 'resource:read', 'forum:read', 'rating:read', 'practice_session:read'])]
     private ?string $email = null;
 
     #[ORM\Column(name: 'password_hash', length: 255)]
     private ?string $password = null;
 
     #[ORM\Column(length: 50, unique: true)]
-    #[Groups(['user:read', 'user:write', 'resource:read', 'forum:read', 'rating:read'])]
+    #[Groups(['user:read', 'user:write', 'resource:read', 'forum:read', 'rating:read', 'practice_session:read'])]
     private ?string $username = null;
 
     #[ORM\Column(length: 100, nullable: true)]
-    #[Groups(['user:read', 'user:write', 'resource:read', 'forum:read'])]
+    #[Groups(['user:read', 'user:write', 'resource:read', 'forum:read', 'practice_session:read'])]
     private ?string $fullName = null;
 
     #[ORM\ManyToOne(targetEntity: Role::class, inversedBy: 'users')]
     #[ORM\JoinColumn(name: 'role_id', referencedColumnName: 'id', onDelete: 'SET NULL')]
-    #[Groups(['user:read'])]
+    #[Groups(['user:read', 'user:role', 'practice_session:read'])]
     private ?Role $role = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Groups(['user:read', 'user:write'])]
+    #[Groups(['user:read', 'user:write', 'practice_session:read'])]
     private ?string $avatarUrl = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]

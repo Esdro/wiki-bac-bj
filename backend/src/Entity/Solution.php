@@ -6,6 +6,7 @@ use App\Entity\Trait\UuidPrimaryKey;
 use App\Repository\SolutionRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Attribute\Groups;
 use Symfony\Component\Uid\Uuid;
 
 #[ORM\Entity(repositoryClass: SolutionRepository::class)]
@@ -16,13 +17,16 @@ class Solution
 
     #[ORM\OneToOne(targetEntity: Resource::class, inversedBy: 'solution')]
     #[ORM\JoinColumn(nullable: false, unique: true, onDelete: 'CASCADE')]
+    #[Groups(['solution:read', 'resource:read'])]
     private ?Resource $resource = null;
 
     #[ORM\ManyToOne(targetEntity: ExamPaper::class, inversedBy: 'solutions')]
     #[ORM\JoinColumn(onDelete: 'SET NULL')]
+    #[Groups(['solution:read'])]
     private ?ExamPaper $examPaper = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
+    #[Groups(['solution:read'])]
     private ?string $contentText = null;
 
     public function __construct()

@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Entity\Trait\UuidPrimaryKey;
 use App\Repository\PracticeSessionRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Attribute\Groups;
 use Symfony\Component\Uid\Uuid;
 
 #[ORM\Entity(repositoryClass: PracticeSessionRepository::class)]
@@ -15,22 +16,28 @@ class PracticeSession
 
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'practiceSessions')]
     #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
+    #[Groups(['practice_session:read', 'user:read'])]
     private ?User $user = null;
 
     #[ORM\ManyToOne(targetEntity: Subject::class, inversedBy: 'practiceSessions')]
     #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
+    #[Groups(['practice_session:read', 'user:read'])]
     private ?Subject $subject = null;
 
     #[ORM\Column(type: 'datetime_immutable')]
+    #[Groups(['practice_session:read', 'user:read'])]
     private ?\DateTimeImmutable $startTime = null;
 
     #[ORM\Column(type: 'datetime', nullable: true)]
+    #[Groups(['practice_session:read', 'user:read'])]
     private ?\DateTimeInterface $endTime = null;
 
     #[ORM\Column(nullable: true)]
+    #[Groups(['practice_session:read', 'user:read'])]
     private ?int $durationMinutes = null;
 
     #[ORM\Column(type: 'json', nullable: true)]
+    #[Groups(['practice_session:read'])]
     private ?array $resourcesUsed = null;
 
     public function __construct()

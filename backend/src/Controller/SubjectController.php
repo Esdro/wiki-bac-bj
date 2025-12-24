@@ -10,6 +10,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Uid\Uuid;
 
 #[Route('/api/subjects', name: 'api_subjects_')]
@@ -17,21 +18,21 @@ class SubjectController extends AbstractController
 {
     public function __construct(
         private EntityManagerInterface $entityManager,
-        private SubjectRepository $repository
+        private SubjectRepository $repository,
+        private SerializerInterface $serializer
     ) {}
 
     #[Route('', name: 'list', methods: ['GET'])]
     public function list(): JsonResponse
     {
         $subjects = $this->repository->findAll();
-        return $this->json($subjects, 200, [], ['groups' => ['subject:read']]);
+        $subjects = $this->serializer->serialize($subjects,  'json', ['groups' => ['subject:read']]);
+        return $this->json(json_decode($subjects), 200, []);
     }
 
-    #[Route('/{id}', name: 'show', methods: ['GET'])]
-    public function show(string $id): JsonResponse
+    #[Route('/{slug:subject}', name: 'show', methods: ['GET'])]
+    public function show(Subject $subject): JsonResponse
     {
-        $subject = $this->repository->find(Uuid::fromString($id));
-        
         if (!$subject) {
             return $this->json(['error' => 'Subject not found'], Response::HTTP_NOT_FOUND);
         }
@@ -43,7 +44,7 @@ class SubjectController extends AbstractController
     public function create(Request $request): JsonResponse
     {
         $data = json_decode($request->getContent(), true);
-        
+
         $subject = new Subject();
         $subject->setNameWithSlug($data['name'] ?? null);
         $subject->setCode($data['code'] ?? null);
@@ -59,13 +60,13 @@ class SubjectController extends AbstractController
     public function update(string $id, Request $request): JsonResponse
     {
         $subject = $this->repository->find(Uuid::fromString($id));
-        
+
         if (!$subject) {
             return $this->json(['error' => 'Subject not found'], Response::HTTP_NOT_FOUND);
         }
 
         $data = json_decode($request->getContent(), true);
-        
+
         if (isset($data['name'])) {
             $subject->setNameWithSlug($data['name']);
         }
@@ -85,7 +86,7 @@ class SubjectController extends AbstractController
     public function delete(string $id): JsonResponse
     {
         $subject = $this->repository->find(Uuid::fromString($id));
-        
+
         if (!$subject) {
             return $this->json(['error' => 'Subject not found'], Response::HTTP_NOT_FOUND);
         }

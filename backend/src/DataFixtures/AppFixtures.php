@@ -164,26 +164,40 @@ class AppFixtures extends Fixture
         $documentType = $examPaperType;
         $articleType = $revisionSheetType;
 
-        // ===== MATIÈRES (créer ou récupérer) =====
-        $mathSubject = $manager->getRepository(Subject::class)->findOneBy(['code' => 'MATH']);
-        if (!$mathSubject) {
-            $mathSubject = (new Subject())->setName('Mathématiques')->setCode('MATH')->setIcon('📐');
-            $manager->persist($mathSubject);
-        }
+        // ===== MATIÈRES (créer tous les sujets) =====
+        // Créer les 8 matières du système scolaire béninois
+        $allSubjects = [
+            ['name' => 'Mathématiques', 'code' => 'MATH', 'icon' => '📐'],
+            ['name' => 'Physique-Chimie-Technologie', 'code' => 'PCT', 'icon' => '⚛️'],
+            ['name' => 'Sciences de la Vie et de la Terre', 'code' => 'SVT', 'icon' => '🧬'],
+            ['name' => 'Français', 'code' => 'FR', 'icon' => '📖'],
+            ['name' => 'Philosophie', 'code' => 'PHILO', 'icon' => '🤔'],
+            ['name' => 'Anglais', 'code' => 'ANG', 'icon' => '🇬🇧'],
+            ['name' => 'Histoire-Géographie', 'code' => 'HG', 'icon' => '🌍'],
+            ['name' => 'Éducation Civique et Morale', 'code' => 'ECM', 'icon' => '⚖️'],
+        ];
 
-        $frenchSubject = $manager->getRepository(Subject::class)->findOneBy(['code' => 'FR']);
-        if (!$frenchSubject) {
-            $frenchSubject = (new Subject())->setName('Français')->setCode('FR')->setIcon('📖');
-            $manager->persist($frenchSubject);
-        }
-
-        $scienceSubject = $manager->getRepository(Subject::class)->findOneBy(['code' => 'SVT']);
-        if (!$scienceSubject) {
-            $scienceSubject = (new Subject())->setName('Sciences de la Vie et de la Terre')->setCode('SVT')->setIcon('🧬');
-            $manager->persist($scienceSubject);
+        $subjects = [];
+        foreach ($allSubjects as $subjectData) {
+            $existingSubject = $manager->getRepository(Subject::class)->findOneBy(['code' => $subjectData['code']]);
+            if (!$existingSubject) {
+                $subject = (new Subject())
+                    ->setName($subjectData['name'])
+                    ->setCode($subjectData['code'])
+                    ->setIcon($subjectData['icon']);
+                $manager->persist($subject);
+                $subjects[$subjectData['code']] = $subject;
+            } else {
+                $subjects[$subjectData['code']] = $existingSubject;
+            }
         }
 
         $manager->flush();
+
+        // Récupération des sujets utilisés par les fixtures
+        $mathSubject = $subjects['MATH'];
+        $frenchSubject = $subjects['FR'];
+        $scienceSubject = $subjects['SVT'];
 
         // ===== CHAPITRES =====
         $chapter1 = (new Chapter())

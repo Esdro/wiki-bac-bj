@@ -306,6 +306,17 @@ export function sortResources<T extends IResource>(
 /**
  * Filter resources by multiple criteria
  */
+/**
+ * Filters an array of resources based on the provided criteria.
+ * @template T - The type of resources to filter, must extend IResource
+ * @param resources - The array of resources to filter
+ * @param criteria - An object containing key-value pairs to match against resources
+ * @returns A new array containing only the resources that match all criteria
+ * @example
+ * const users = [{id: 1, name: 'John'}, {id: 2, name: 'Jane'}];
+ * const filtered = filterResources(users, {id: 1});
+ * // Result: [{id: 1, name: 'John'}]
+ */
 export function filterResources<T extends IResource>(
   resources: T[],
   criteria: Partial<Record<keyof IResource, any>>

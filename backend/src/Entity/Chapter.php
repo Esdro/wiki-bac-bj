@@ -22,7 +22,7 @@ class Chapter
 
     #[ORM\ManyToOne(targetEntity: Subject::class, inversedBy: 'chapters')]
     #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
-    #[Groups(['chapter:read', 'resource:read'])]
+    #[Groups(['chapter:read'])]
     private ?Subject $subject = null;
 
     #[ORM\Column(length: 255)]

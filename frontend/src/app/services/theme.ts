@@ -11,7 +11,7 @@ export type ThemeOptions = EThemeModes.LIGHT | EThemeModes.DARK | EThemeModes.SY
 @Injectable({
   providedIn: 'root',
 })
-export class DarkModeService implements OnDestroy {
+export class ThemeModeService implements OnDestroy {
   private readonly document = inject(DOCUMENT);
   private handleThemeChange = (event: MediaQueryListEvent) => this.updateMode(event.matches);
   private readonly isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
@@ -32,6 +32,12 @@ export class DarkModeService implements OnDestroy {
     this.applyTheme(this.getStoredTheme() ?? EThemeModes.SYSTEM);
   }
 
+
+
+/**
+ * Toggle between light and dark mode
+ * @returns 
+ */
   toggleTheme(): void {
     const currentTheme = this.getCurrentTheme();
     if (!this.isBrowser || currentTheme === EThemeModes.SYSTEM) {
@@ -41,6 +47,11 @@ export class DarkModeService implements OnDestroy {
     this.applyTheme(currentTheme === EThemeModes.DARK ? EThemeModes.LIGHT : EThemeModes.DARK);
   }
 
+  /**
+   * Activate a specific theme
+   * @param theme - ThemeOptions
+   * @returns 
+   */
   activateTheme(theme: ThemeOptions): void {
     if (!this.isBrowser) {
       return;

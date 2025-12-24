@@ -26,7 +26,7 @@ class SolutionController extends AbstractController
     public function list(): JsonResponse
     {
         $solutions = $this->repository->findAll();
-        return $this->json($solutions);
+        return $this->json($solutions, context: ['groups' => ['solution:read']]);
     }
 
     #[Route('/{id}', name: 'show', methods: ['GET'])]
@@ -38,7 +38,7 @@ class SolutionController extends AbstractController
             return $this->json(['error' => 'Solution not found'], Response::HTTP_NOT_FOUND);
         }
 
-        return $this->json($solution);
+        return $this->json($solution, context: ['groups' => ['solution:read']]);
     }
 
     #[Route('', name: 'create', methods: ['POST'])]
@@ -47,7 +47,7 @@ class SolutionController extends AbstractController
         $data = json_decode($request->getContent(), true);
         
         $solution = new Solution();
-        $solution->setContent($data['content'] ?? null);
+        $solution->setContentText($data['contentText'] ?? null);
         
         if (isset($data['resourceId'])) {
             $resource = $this->resourceRepository->find(Uuid::fromString($data['resourceId']));
@@ -59,7 +59,7 @@ class SolutionController extends AbstractController
         $this->entityManager->persist($solution);
         $this->entityManager->flush();
 
-        return $this->json($solution, Response::HTTP_CREATED);
+        return $this->json($solution, Response::HTTP_CREATED, context: ['groups' => ['solution:read']]);
     }
 
     #[Route('/{id}', name: 'update', methods: ['PUT'])]
@@ -73,13 +73,13 @@ class SolutionController extends AbstractController
 
         $data = json_decode($request->getContent(), true);
         
-        if (isset($data['content'])) {
-            $solution->setContent($data['content']);
+        if (isset($data['contentText'])) {
+            $solution->setContentText($data['contentText']);
         }
 
         $this->entityManager->flush();
 
-        return $this->json($solution);
+        return $this->json($solution, context: ['groups' => ['solution:read']]);
     }
 
     #[Route('/{id}', name: 'delete', methods: ['DELETE'])]

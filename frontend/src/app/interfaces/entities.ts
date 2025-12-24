@@ -85,7 +85,6 @@ export interface IUpdateUserDto {
 export interface IResourceType {
   id: string; // UUID v7
   name: string;
-  slug?: string | null;
   description?: string | null;
   createdAt?: string; // ISO 8601 datetime
   resources?: IResource[];
@@ -193,7 +192,6 @@ export interface ISeries {
   id: string; // UUID v7
   name: string;
   code: string;
-  slug?: string | null;
   description?: string | null;
   seriesSubjects?: ISeriesSubject[];
   resources?: IResource[];

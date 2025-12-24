@@ -1,0 +1,26 @@
+<z-card class="flex flex-col items-center p-6 shadow-md w-md max-w-5xl mx-auto" zTitle="Authentication"
+    zDescription="Please enter your credentials to log in">
+    @if (formIsLoading()) {
+    <div class="flex flex-col items-center h-20 justify-center">
+        <z-loader zSize="lg" class="my-4" />
+    </div>
+    }@else {
+    <form [formGroup]="profileForm" (ngSubmit)="onSubmit()" class="max-w-md mx-auto  space-y-6">
+        <z-form-field>
+            <label z-form-label zRequired>Username</label>
+            <z-form-control>
+                <input z-input type="text" placeholder="Type your username" formControlName="username" />
+            </z-form-control>
+        </z-form-field>
+        <z-form-field>
+            <label z-form-label zRequired>Password</label>
+            <z-form-control>
+                <input z-input type="password" placeholder="Type your password" formControlName="password" />
+            </z-form-control>
+        </z-form-field>
+
+        <button z-button zType="outline" type="submit" [disabled]="profileForm.invalid" class="w-full"
+            zSize="lg">Connexion </button>
+    </form>
+    }
+</z-card>
